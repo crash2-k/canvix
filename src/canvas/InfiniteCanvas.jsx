@@ -1,16 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./InfiniteCanvas.css";
 
-interface Camera {
-  x: number;
-  y: number;
-  zoom: number;
-}
-
 export default function InfiniteCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef(null);
 
-  const [camera, setCamera] = useState<Camera>({
+  const [camera, setCamera] = useState({
     x: 0,
     y: 0,
     zoom: 1,
@@ -23,7 +17,6 @@ export default function InfiniteCanvas() {
     y: 0,
   });
 
-  // Draw canvas
   useEffect(() => {
     const canvas = canvasRef.current;
 
@@ -41,9 +34,7 @@ export default function InfiniteCanvas() {
     drawGrid(ctx, canvas, camera);
   }, [camera]);
 
-  function handleMouseDown(
-    event: React.MouseEvent<HTMLCanvasElement>
-  ) {
+  function handleMouseDown(event) {
     setIsPanning(true);
 
     lastMouse.current = {
@@ -52,9 +43,7 @@ export default function InfiniteCanvas() {
     };
   }
 
-  function handleMouseMove(
-    event: React.MouseEvent<HTMLCanvasElement>
-  ) {
+  function handleMouseMove(event) {
     if (!isPanning) return;
 
     const dx = event.clientX - lastMouse.current.x;
@@ -76,9 +65,7 @@ export default function InfiniteCanvas() {
     setIsPanning(false);
   }
 
-  function handleWheel(
-    event: React.WheelEvent<HTMLCanvasElement>
-  ) {
+  function handleWheel(event) {
     event.preventDefault();
 
     const zoomSpeed = 0.001;
@@ -86,7 +73,7 @@ export default function InfiniteCanvas() {
     setCamera((prev) => {
       const newZoom = Math.min(
         Math.max(prev.zoom - event.deltaY * zoomSpeed, 0.2),
-        5
+        5,
       );
 
       return {
@@ -109,11 +96,7 @@ export default function InfiniteCanvas() {
   );
 }
 
-function drawGrid(
-  ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
-  camera: Camera
-) {
+function drawGrid(ctx, canvas, camera) {
   const gridSize = 40 * camera.zoom;
 
   ctx.strokeStyle = "#e5e5e5";
